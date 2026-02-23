@@ -15,7 +15,7 @@
 | Feature | Description |
 |---|---|
 | 📊 **Global Market Header** | Live Market Cap, 24h Volume, BTC & ETH dominance |
-| 📋 **Live Asset Table** | Top 250 coins — sortable, paginated, with sparklines |
+| 📋 **Live Asset Table** | CoinGecko + CoinMarketCap listings, sortable/paginated, with sparklines |
 | 🕯️ **Interactive Charts** | 1D / 7D / 1M / 1Y area charts per coin |
 | 💼 **Portfolio Simulator** | Add coins with buy price & quantity, track P&L |
 | 📰 **Crypto News** | Integrated CryptoPanic feed with sentiment tags |
@@ -32,7 +32,7 @@
 - **Styling**: Tailwind CSS + Glassmorphism design system
 - **Data Fetching**: TanStack Query v5 (SSR + client-side caching)
 - **Charts**: Recharts
-- **APIs**: CoinGecko · Alternative.me · CryptoPanic
+- **APIs**: CoinGecko · CoinMarketCap · Alternative.me · CryptoPanic
 - **Deployment**: Vercel (Edge runtime on API routes)
 - **CI/CD**: GitHub Actions → Vercel auto-deploy
 
@@ -62,6 +62,9 @@ CRYPTOPANIC_TOKEN=your_token_here
 
 # Optional — CoinGecko Pro key for higher rate limits
 # COINGECKO_API_KEY=your_key_here
+
+# Optional — CoinMarketCap key to include CMC listings
+# COINMARKETCAP_API_KEY=your_key_here
 
 # Your deployed URL (for metadata)
 NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
@@ -179,7 +182,7 @@ All API routes are proxied through Next.js — your API tokens stay server-side 
 
 | Route | Method | Description | Cache |
 |---|---|---|---|
-| `/api/coins` | GET | Market list (page, per_page params) | 60s |
+| `/api/coins` | GET | Market list (`source`, `page`, `per_page<=250`) | 60s |
 | `/api/global` | GET | Global market statistics | 120s |
 | `/api/coin/:id` | GET | Coin detail or chart (action param) | 30s |
 | `/api/news` | GET | CryptoPanic news feed | 5min |
@@ -204,6 +207,7 @@ All API routes are proxied through Next.js — your API tokens stay server-side 
 |---|---|---|
 | `CRYPTOPANIC_TOKEN` | Recommended | Get free at [cryptopanic.com](https://cryptopanic.com/developers/api/) |
 | `COINGECKO_API_KEY` | Optional | Pro key for higher rate limits |
+| `COINMARKETCAP_API_KEY` | Optional | Pulls CoinMarketCap listings into `/api/coins` |
 | `NEXT_PUBLIC_APP_URL` | Recommended | Your deployed URL for SEO metadata |
 
 ---

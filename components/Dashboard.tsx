@@ -10,7 +10,7 @@ import { PortfolioView } from './portfolio/PortfolioView';
 import { AddPositionModal } from './portfolio/AddPositionModal';
 import { NewsCard } from './news/NewsCard';
 import { Skeleton } from './ui/Skeleton';
-import { useCoins } from '@/hooks/useCoins';
+import { useCoins, type MarketSource } from '@/hooks/useCoins';
 import { useGlobal } from '@/hooks/useGlobal';
 import { useNews } from '@/hooks/useNews';
 import { usePortfolio } from '@/hooks/usePortfolio';
@@ -21,6 +21,7 @@ type Tab = 'market' | 'portfolio' | 'news';
 export function Dashboard() {
   const [tab, setTab] = useState<Tab>('market');
   const [page, setPage] = useState(1);
+  const [source, setSource] = useState<MarketSource>('all');
   const [showSearch, setShowSearch] = useState(false);
   const [addModal, setAddModal] = useState<CoinMarket | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: keyof CoinMarket; dir: 'asc' | 'desc' }>({
@@ -28,7 +29,7 @@ export function Dashboard() {
     dir: 'asc',
   });
 
-  const { data: coins = [], isLoading, isError, refetch } = useCoins(page);
+  const { data: coins = [], isLoading, isError, refetch } = useCoins(page, 250, source);
   const { data: globalData, isLoading: globalLoading } = useGlobal();
   const { data: news = [], isLoading: newsLoading } = useNews();
   const { portfolio, add, remove, has } = usePortfolio();
@@ -211,7 +212,7 @@ export function Dashboard() {
               }}
             >
               <AlertTriangle size={15} />
-              CoinGecko rate limit reached. Please wait a moment and refresh.
+              Market API rate limit reached. Please wait a moment and refresh.
               <button onClick={() => refetch()} className="ml-auto text-xs underline">
                 Retry
               </button>
@@ -265,6 +266,23 @@ export function Dashboard() {
                     )}
                   </button>
                 ))}
+              </div>
+
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500">Source</span>
+                <select
+                  value={source}
+                  onChange={(e) => {
+                    setPage(1);
+                    setSource(e.target.value as MarketSource);
+                  }}
+                  className="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-slate-300"
+                >
+                  <option value="all">CoinGecko + CMC</option>
+                  <option value="coingecko">CoinGecko</option>
+                  <option value="coinmarketcap">CoinMarketCap</option>
+                </select>
               </div>
 
               {tab === 'market' && (
@@ -321,7 +339,7 @@ export function Dashboard() {
           </div>
 
           <div className="text-center text-xs text-slate-700 pb-4">
-            Data by CoinGecko & Alternative.me · News by CryptoPanic · © Talons
+            Data by CoinGecko + CoinMarketCap + Alternative.me · News by CryptoPanic · © Talons
           </div>
         </div>
       </div>

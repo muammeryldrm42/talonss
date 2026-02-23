@@ -34,6 +34,11 @@ export function CommandBar({ coins, onClose }: Props) {
   }, [q, coins]);
 
   const handleSelect = (coin: CoinMarket) => {
+    if (coin.source === 'coinmarketcap' && coin.external_url) {
+      window.open(coin.external_url, '_blank', 'noopener,noreferrer');
+      onClose();
+      return;
+    }
     router.push(`/coin/${coin.id}`);
     onClose();
   };
@@ -78,7 +83,7 @@ export function CommandBar({ coins, onClose }: Props) {
               <Image src={c.image} alt={c.name} width={28} height={28} className="rounded-full" />
               <div className="flex-1">
                 <div className="text-sm font-semibold text-white">{c.name}</div>
-                <div className="text-xs text-slate-500 uppercase">{c.symbol}</div>
+                <div className="text-xs text-slate-500 uppercase">{c.symbol} · {c.source === 'coinmarketcap' ? 'CMC' : 'CG'}</div>
               </div>
               <div className="text-right">
                 <div className="text-sm font-mono text-white">{fmt.usd(c.current_price)}</div>
