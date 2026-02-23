@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://talons.vercel.app/sitemap.xml
