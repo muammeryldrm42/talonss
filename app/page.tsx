@@ -19,7 +19,7 @@ export default async function HomePage() {
     }),
     qc.prefetchQuery({
       queryKey: ['fear-greed'],
-      queryFn: getFearGreedIndex,
+      queryFn: () => getFearGreedIndex(),
     }),
   ]);
 
