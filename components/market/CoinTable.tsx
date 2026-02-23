@@ -82,7 +82,10 @@ export function CoinTable({ coins, loading, portfolio, onTogglePortfolio, sortCo
               <TH col="price_change_percentage_24h_in_currency" label="24h" {...sharedTH} />
               <TH col="price_change_percentage_7d_in_currency" label="7d" {...sharedTH} />
               <TH col="market_cap" label="Mkt Cap" {...sharedTH} />
+              <TH col="fully_diluted_valuation" label="FDV" {...sharedTH} />
+              <TH col="total_volume" label="Volume" {...sharedTH} />
               <TH col="circulating_supply" label="Supply" {...sharedTH} />
+              <TH col="source" label="Source" {...sharedTH} />
               <th className="px-3 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
                 7d Chart
               </th>
@@ -102,19 +105,35 @@ export function CoinTable({ coins, loading, portfolio, onTogglePortfolio, sortCo
                     {coin.market_cap_rank}
                   </td>
                   <td className="px-3 py-3">
-                    <Link href={`/coin/${coin.id}`} className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-                      <Image
-                        src={coin.image}
-                        alt={coin.name}
-                        width={28}
-                        height={28}
-                        className="rounded-full"
-                      />
-                      <div>
-                        <div className="font-semibold text-white text-sm">{coin.name}</div>
-                        <div className="text-xs text-slate-500 uppercase">{coin.symbol}</div>
-                      </div>
-                    </Link>
+                    {coin.source === 'coinmarketcap' ? (
+                      <a href={coin.external_url} target="_blank" rel="noreferrer" className="flex items-center gap-2.5 opacity-90 hover:opacity-100 transition-opacity">
+                        <Image
+                          src={coin.image}
+                          alt={coin.name}
+                          width={28}
+                          height={28}
+                          className="rounded-full"
+                        />
+                        <div>
+                          <div className="font-semibold text-white text-sm">{coin.name}</div>
+                          <div className="text-xs text-slate-500 uppercase">{coin.symbol}</div>
+                        </div>
+                      </a>
+                    ) : (
+                      <Link href={`/coin/${coin.id}`} className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+                        <Image
+                          src={coin.image}
+                          alt={coin.name}
+                          width={28}
+                          height={28}
+                          className="rounded-full"
+                        />
+                        <div>
+                          <div className="font-semibold text-white text-sm">{coin.name}</div>
+                          <div className="text-xs text-slate-500 uppercase">{coin.symbol}</div>
+                        </div>
+                      </Link>
+                    )}
                   </td>
                   <td className="px-3 py-3 font-mono font-semibold text-white">
                     {fmt.usd(coin.current_price)}
@@ -131,8 +150,19 @@ export function CoinTable({ coins, loading, portfolio, onTogglePortfolio, sortCo
                   <td className="px-3 py-3 text-slate-300 font-mono text-xs">
                     {fmt.usd(coin.market_cap)}
                   </td>
+                  <td className="px-3 py-3 text-slate-300 font-mono text-xs">
+                    {fmt.usd(coin.fully_diluted_valuation)}
+                  </td>
+                  <td className="px-3 py-3 text-slate-300 font-mono text-xs">
+                    {fmt.usd(coin.total_volume)}
+                  </td>
                   <td className="px-3 py-3 text-slate-400 font-mono text-xs">
                     {fmt.supply(coin.circulating_supply)}
+                  </td>
+                  <td className="px-3 py-3 text-xs">
+                    <span className="px-2 py-1 rounded-md bg-white/5 text-slate-400">
+                      {coin.source === 'coinmarketcap' ? 'CMC' : 'CG'}
+                    </span>
                   </td>
                   <td className="px-3 py-3">
                     <Sparkline data={coin.sparkline_in_7d?.price} />

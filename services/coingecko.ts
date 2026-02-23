@@ -41,7 +41,8 @@ export async function getCoinsMarkets({
     const err = await res.text();
     throw new Error(`CoinGecko markets error ${res.status}: ${err}`);
   }
-  return res.json();
+  const data = (await res.json()) as CoinMarket[];
+  return data.map((coin) => ({ ...coin, source: 'coingecko' }));
 }
 
 // ─── Global Data ──────────────────────────────────────────────────────────────
