@@ -29,7 +29,7 @@ export function Dashboard() {
     dir: 'asc',
   });
 
-  const { data: coins = [], isLoading, isError, refetch } = useCoins(page, 250, source);
+  const { data: coins = [], isLoading, isError, refetch } = useCoins(page, 10_000, source);
   const { data: globalData, isLoading: globalLoading } = useGlobal();
   const { data: news = [], isLoading: newsLoading } = useNews();
   const { portfolio, add, remove, has } = usePortfolio();

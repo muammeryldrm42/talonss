@@ -9,7 +9,7 @@ async function fetchCoins(page: number, perPage: number, source: MarketSource): 
   return res.json();
 }
 
-export function useCoins(page = 1, perPage = 250, source: MarketSource = 'all') {
+export function useCoins(page = 1, perPage = 10_000, source: MarketSource = 'all') {
   return useQuery({
     queryKey: ['coins', 'markets', page, perPage, source],
     queryFn: () => fetchCoins(page, perPage, source),

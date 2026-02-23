@@ -182,7 +182,7 @@ All API routes are proxied through Next.js — your API tokens stay server-side 
 
 | Route | Method | Description | Cache |
 |---|---|---|---|
-| `/api/coins` | GET | Market list (`source`, `page`, `per_page<=250`) | 60s |
+| `/api/coins` | GET | Market list (`source`, `page`, `per_page<=10000`, chunked resolver) | 60s |
 | `/api/global` | GET | Global market statistics | 120s |
 | `/api/coin/:id` | GET | Coin detail or chart (action param) | 30s |
 | `/api/news` | GET | CryptoPanic news feed | 5min |

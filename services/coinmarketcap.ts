@@ -31,6 +31,7 @@ interface CmcListingsResponse {
 export interface CmcListingsParams {
   page?: number;
   perPage?: number;
+  start?: number;
 }
 
 function assertApiKey(): string {
@@ -44,12 +45,13 @@ function assertApiKey(): string {
 export async function getCoinMarketCapListings({
   page = 1,
   perPage = 50,
+  start,
 }: CmcListingsParams = {}): Promise<CoinMarket[]> {
   const key = assertApiKey();
-  const start = (page - 1) * perPage + 1;
+  const resolvedStart = start ?? (page - 1) * perPage + 1;
 
   const url = new URL(`${BASE}/cryptocurrency/listings/latest`);
-  url.searchParams.set('start', String(start));
+  url.searchParams.set('start', String(resolvedStart));
   url.searchParams.set('limit', String(perPage));
   url.searchParams.set('convert', 'USD');
 
