@@ -33,6 +33,8 @@ export interface CoinMarket {
   roi: { times: number; currency: string; percentage: number } | null;
   last_updated: string;
   sparkline_in_7d: SparklineData;
+  source?: 'coingecko' | 'coinmarketcap';
+  external_url?: string;
 }
 
 export interface CoinDetail {
