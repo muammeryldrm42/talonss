@@ -23,7 +23,7 @@ export function Dashboard() {
   const [page, setPage] = useState(1);
   const [showSearch, setShowSearch] = useState(false);
   const [addModal, setAddModal] = useState<CoinMarket | null>(null);
-  const [sortConfig, setSortConfig] = useState<{ key: string; dir: 'asc' | 'desc' }>({
+  const [sortConfig, setSortConfig] = useState<{ key: keyof CoinMarket; dir: 'asc' | 'desc' }>({
     key: 'market_cap_rank',
     dir: 'asc',
   });
@@ -46,7 +46,7 @@ export function Dashboard() {
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
-  const handleSort = useCallback((key: string) => {
+  const handleSort = useCallback((key: keyof CoinMarket) => {
     setSortConfig((sc) => ({
       key,
       dir: sc.key === key && sc.dir === 'asc' ? 'desc' : 'asc',
@@ -56,9 +56,22 @@ export function Dashboard() {
   const sortedCoins = useMemo(() => {
     if (!coins.length) return coins;
     return [...coins].sort((a, b) => {
-      const av = (a as Record<string, unknown>)[sortConfig.key] as number ?? -Infinity;
-      const bv = (b as Record<string, unknown>)[sortConfig.key] as number ?? -Infinity;
-      return sortConfig.dir === 'asc' ? (av > bv ? 1 : -1) : av < bv ? 1 : -1;
+      const av = a[sortConfig.key];
+      const bv = b[sortConfig.key];
+
+      if (typeof av === 'number' || av === null) {
+        const an = av ?? -Infinity;
+        const bn = typeof bv === 'number' || bv === null ? (bv ?? -Infinity) : -Infinity;
+        return sortConfig.dir === 'asc' ? (an > bn ? 1 : -1) : an < bn ? 1 : -1;
+      }
+
+      if (typeof av === 'string') {
+        const as = av.toLowerCase();
+        const bs = typeof bv === 'string' ? bv.toLowerCase() : '';
+        return sortConfig.dir === 'asc' ? as.localeCompare(bs) : bs.localeCompare(as);
+      }
+
+      return 0;
     });
   }, [coins, sortConfig]);
 

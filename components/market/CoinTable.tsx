@@ -10,7 +10,7 @@ import { fmt } from '@/lib/format';
 import type { CoinMarket } from '@/types/coin';
 
 interface SortConfig {
-  key: string;
+  key: keyof CoinMarket;
   dir: 'asc' | 'desc';
 }
 
@@ -20,12 +20,12 @@ interface Props {
   portfolio: { id: string }[];
   onTogglePortfolio: (coin: CoinMarket) => void;
   sortConfig: SortConfig;
-  onSort: (key: string) => void;
+  onSort: (key: keyof CoinMarket) => void;
   page: number;
   setPage: (fn: (p: number) => number) => void;
 }
 
-function SortIcon({ col, sortConfig }: { col: string; sortConfig: SortConfig }) {
+function SortIcon({ col, sortConfig }: { col: keyof CoinMarket; sortConfig: SortConfig }) {
   if (sortConfig.key !== col) return <ChevronsUpDown size={12} className="text-slate-600" />;
   return sortConfig.dir === 'asc'
     ? <ChevronUp size={12} className="text-sky-400" />
@@ -33,8 +33,8 @@ function SortIcon({ col, sortConfig }: { col: string; sortConfig: SortConfig }) 
 }
 
 function TH({ col, label, className, onSort, sortConfig }: {
-  col: string; label: string; className?: string;
-  onSort: (k: string) => void; sortConfig: SortConfig;
+  col: keyof CoinMarket; label: string; className?: string;
+  onSort: (k: keyof CoinMarket) => void; sortConfig: SortConfig;
 }) {
   return (
     <th
